@@ -522,7 +522,14 @@ object mon {
         "auth" -> auth
       )
     )
-
+  }
+  object streak {
+    object selector {
+      val time                    = timer("streak.selector.time").withoutTags()
+      val count                   = histogram("streak.selector.count").withoutTags()
+      val rating                  = histogram("streak.selector.rating").withoutTags()
+      def ratingSlice(index: Int) = histogram("streak.selector.ratingSlice").withTag("index", index)
+    }
   }
   object game {
     def finish(variant: String, speed: String, source: String, mode: String, status: String) =

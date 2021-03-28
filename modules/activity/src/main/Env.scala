@@ -38,11 +38,14 @@ final class Env(
     "finishPuzzle" -> { case res: lila.puzzle.Puzzle.UserResult =>
       write.puzzle(res).unit
     },
-    "stormRun" -> { case lila.hub.actorApi.storm.StormRun(userId, score) =>
+    "stormRun" -> { case lila.hub.actorApi.puzzle.StormRun(userId, score) =>
       write.storm(userId, score).unit
     },
-    "racerRun" -> { case lila.hub.actorApi.racer.RacerRun(userId, score) =>
+    "racerRun" -> { case lila.hub.actorApi.puzzle.RacerRun(userId, score) =>
       write.racer(userId, score).unit
+    },
+    "streakRun" -> { case lila.hub.actorApi.puzzle.StreakRun(userId, score) =>
+      write.streak(userId, score).unit
     }
   )
 

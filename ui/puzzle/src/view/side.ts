@@ -1,8 +1,9 @@
-import { Controller, Puzzle, PuzzleGame, MaybeVNode, PuzzleDifficulty, PuzzlePlayer } from '../interfaces';
+import { Controller, Puzzle, PuzzleGame, MaybeVNode, PuzzleDifficulty } from '../interfaces';
 import { dataIcon, onInsert } from '../util';
 import { h } from 'snabbdom';
 import { numberFormat } from 'common/number';
 import { VNode } from 'snabbdom/vnode';
+import PuzzleStreak from '../streak';
 
 export function puzzleBox(ctrl: Controller): VNode {
   var data = ctrl.getData();
@@ -17,23 +18,31 @@ function puzzleInfos(ctrl: Controller, puzzle: Puzzle): VNode {
     },
     [
       h('div', [
-        h('p', [
-          ...ctrl.trans.vdom(
-            'puzzleId',
-            h(
-              'a',
-              {
-                attrs: { href: `/training/${puzzle.id}` },
-              },
-              '#' + puzzle.id
-            )
-          ),
-        ]),
+        ctrl.streak
+          ? null
+          : h(
+              'p',
+              ctrl.trans.vdom(
+                'puzzleId',
+                h(
+                  'a',
+                  {
+                    attrs: {
+                      href: `/training/${puzzle.id}`,
+                      ...(ctrl.streak ? { target: '_blank' } : {}),
+                    },
+                  },
+                  '#' + puzzle.id
+                )
+              )
+            ),
         h(
           'p',
           ctrl.trans.vdom(
             'ratingX',
-            ctrl.vm.mode === 'play' ? h('span.hidden', ctrl.trans.noarg('hidden')) : h('strong', puzzle.rating)
+            !ctrl.streak && ctrl.vm.mode === 'play'
+              ? h('span.hidden', ctrl.trans.noarg('hidden'))
+              : h('strong', puzzle.rating)
           )
         ),
         h('p', ctrl.trans.vdom('playedXTimes', h('strong', numberFormat(puzzle.plays)))),
@@ -77,7 +86,7 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
                     {
                       attrs: { href: '/@/' + p.userId },
                     },
-                    playerName(p)
+                    p.title && p.title != 'BOT' ? [h('span.utitle', p.title), ' ' + p.name] : p.name
                   )
                 : p.name
             )
@@ -88,11 +97,30 @@ function gameInfos(ctrl: Controller, game: PuzzleGame, puzzle: Puzzle): VNode {
   );
 }
 
-function playerName(p: PuzzlePlayer) {
-  return p.title && p.title != 'BOT' ? [h('span.utitle', p.title), ' ' + p.name] : p.name;
-}
+const renderStreak = (streak: PuzzleStreak, noarg: TransNoArg) =>
+  h(
+    'div.puzzle__side__streak',
+    streak.current == 0
+      ? h('div.puzzle__side__streak__info', [
+          h(
+            'h1.text',
+            {
+              attrs: dataIcon('}'),
+            },
+            'Puzzle Streak'
+          ),
+          h('p', noarg('streakDescription')),
+        ])
+      : h(
+          'div.puzzle__side__streak__score.text',
+          {
+            attrs: dataIcon('}'),
+          },
+          streak.current
+        )
+  );
 
-export function userBox(ctrl: Controller): VNode {
+export const userBox = (ctrl: Controller): VNode => {
   const data = ctrl.getData();
   if (!data.user)
     return h('div.puzzle__side__user', [
@@ -113,7 +141,10 @@ export function userBox(ctrl: Controller): VNode {
       )
     ),
   ]);
-}
+};
+
+export const streakBox = (ctrl: Controller) =>
+  h('div.puzzle__side__user', renderStreak(ctrl.streak!, ctrl.trans.noarg));
 
 const difficulties: PuzzleDifficulty[] = ['easiest', 'easier', 'normal', 'harder', 'hardest'];
 
@@ -159,7 +190,7 @@ export function config(ctrl: Controller): MaybeVNode {
       ]),
       h('label', { attrs: { for: id } }, ctrl.trans.noarg('jumpToNextPuzzleImmediately')),
     ]),
-    !ctrl.getData().replay && ctrl.difficulty
+    !ctrl.getData().replay && !ctrl.streak && ctrl.difficulty
       ? h(
           'form.puzzle__side__config__difficulty',
           {

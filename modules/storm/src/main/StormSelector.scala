@@ -23,6 +23,10 @@ final class StormSelector(colls: PuzzleColls, cacheApi: CacheApi)(implicit ec: E
   private val tier         = lila.puzzle.PuzzleTier.Good.key
   private val maxDeviation = 85
 
+  /* for path boundaries:
+   * 800,  900,  1000, 1100, 1200, 1270, 1340, 1410, 1480, 1550, 1620,
+   * 1690, 1760, 1830, 1900, 2000, 2100, 2200, 2350, 2500, 2650, 2800
+   */
   private val ratingBuckets =
     List(
       1000 -> 7,
@@ -135,13 +139,6 @@ final class StormSelector(colls: PuzzleColls, cacheApi: CacheApi)(implicit ec: E
           lila.mon.storm.selector.ratingSlice(i).record(r.toInt)
         }
       }
-      colls.puzzle {
-        _.update.one(
-          $inIds(puzzles.map(_.id.value)),
-          $inc("storm" -> 1),
-          multi = true
-        )
-      }.unit
     }
   }
 }

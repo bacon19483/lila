@@ -108,6 +108,9 @@ POST  /training/$id<\w{5}>/vote/:theme controllers.Puzzle.voteTheme(id: String, 
 POST  /training/complete/:theme/$id<\w{5}>  controllers.Puzzle.complete(theme: String, id: String)
 POST  /training/difficulty/:theme      controllers.Puzzle.setDifficulty(theme: String)
 
+# Puzzle Streak
+GET   /streak                           controllers.Puzzle.streak
+
 # Puzzle Storm
 GET   /storm                            controllers.Storm.home
 POST  /storm                            controllers.Storm.record
@@ -137,6 +140,7 @@ GET   /study/public/:order             controllers.Study.minePublic(order: Strin
 GET   /study/private/:order            controllers.Study.minePrivate(order: String, page: Int ?= 1)
 GET   /study/likes/:order              controllers.Study.mineLikes(order: String, page: Int ?= 1)
 GET   /study/by/:username              controllers.Study.byOwnerDefault(username: String, page: Int ?= 1)
+GET   /study/by/:username/export.pgn   controllers.Study.export(username: String)
 GET   /study/by/:username/:order       controllers.Study.byOwner(username: String, order: String, page: Int ?= 1)
 GET   /study/search                    controllers.Study.search(q: String ?= "", page: Int ?= 1)
 GET   /study/$id<\w{8}>                controllers.Study.show(id: String)

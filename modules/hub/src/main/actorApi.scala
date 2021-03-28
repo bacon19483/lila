@@ -61,11 +61,10 @@ package msg {
   case class SystemMsg(userId: String, text: String)
 }
 
-package storm {
+package puzzle {
   case class StormRun(userId: String, score: Int)
-}
-package racer {
   case class RacerRun(userId: String, score: Int)
+  case class StreakRun(userId: String, score: Int)
 }
 
 package shutup {
