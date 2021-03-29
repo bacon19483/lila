@@ -810,5 +810,8 @@
   <string name="congratsYouWon">恭喜你获得了胜利！</string>
   <string name="youJustBecamePatron">您已成为 lichess 的赞助者</string>
   <string name="patronAccountExpired">赞助账户已过期</string>
+  <string name="pleaseReconsiderRenewIt">请考虑重新订阅！</string>
+  <string name="someoneReviewedYourCoachProfile">有人审查了您的教练简介。</string>
+  <string name="lostAgainstTOSViolator">您输给违反Lichess使用条件的用户</string>
   <string name="timeAlmostUp">时间快到了！</string>
 </resources>

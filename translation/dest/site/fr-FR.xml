@@ -468,8 +468,8 @@
   <string name="tournamentWinners">Vainqueurs de tournois</string>
   <string name="name">Nom</string>
   <string name="description">Description</string>
-  <string name="descPrivate">Description visible uniquement pour les membres de l\'équipe</string>
-  <string name="descPrivateHelp">Texte que seuls les membres de l\'équipe verront. Si utilisé, remplace la description publique des membres de l\'équipe.</string>
+  <string name="descPrivate">Description privée</string>
+  <string name="descPrivateHelp">Texte que seuls les membres de l\'équipe verront. Si utilisé, remplace la description publique pour les membres de l\'équipe.</string>
   <string name="no">Non</string>
   <string name="yes">Oui</string>
   <string name="help">Aide :</string>
@@ -490,7 +490,7 @@
   <string name="cheat">Triche</string>
   <string name="insult">Insulte</string>
   <string name="troll">Troll</string>
-  <string name="ratingManipulation">Manipulation du classement</string>
+  <string name="ratingManipulation">Manipulation du score</string>
   <string name="other">Autre</string>
   <string name="reportDescriptionHelp">Copiez le(s) lien(s) vers les parties et expliquez en quoi le comportement de cet utilisateur est inapproprié. Ne dites pas juste \"il triche\", mais expliquez comment vous êtes arrivé à cette conclusion. Votre rapport sera traité plus vite s\'il est écrit en anglais.</string>
   <string name="error.provideOneCheatedGameLink">Merci de fournir au moins un lien vers une partie où il y a eu triche.</string>
@@ -843,13 +843,16 @@
   <string name="invitedYouToX"> vous a invité à « %1$s ».</string>
   <string name="xInvitedYouToY">%1$s vous a invité à « %2$s ».</string>
   <string name="youAreNowPartOfTeam">Vous faites maintenant partie de l’équipe.</string>
+  <string name="youHaveJoinedTeamX">Vous avez joint l\'équipe \"%1$s\".</string>
   <string name="someoneYouReportedWasBanned">Quelqu\'un que vous avez signalé a été banni.</string>
-  <string name="congratsYouWon">Bravo, vous avez gagné!</string>
+  <string name="congratsYouWon">Bravo, vous avez gagné !</string>
+  <string name="gameVsX">Partie contre %1$s</string>
+  <string name="resVsX">%1$s contre %2$s</string>
   <string name="youJustBecamePatron">Vous êtes devenu un mécène de Lichess.</string>
   <string name="patronAccountExpired">Statut de mécène expiré</string>
-  <string name="pleaseReconsiderRenewIt">Songez à le renouveler!</string>
+  <string name="pleaseReconsiderRenewIt">Songez à le renouveler !</string>
   <string name="someoneReviewedYourCoachProfile">Quelqu\'un a examiné votre profil de coach.</string>
   <string name="newPendingReview">Nouvelle évaluation en attente</string>
-  <string name="lostAgainstTOSViolator" comment="lostAgainstTOSViolator&#10;&#10;TOS stands for &quot;Terms of Service&quot;">Vous avez perdu contre quelqu\'un qui a violé les règles de Lichess.</string>
-  <string name="timeAlmostUp" comment="timeAlmostUp&#10;&#10;In a correspondence game, the user receives a notification if their time to make a move has almost elapsed. This is the title of such a notification.">Vous n\'avez presque plus de temps!</string>
+  <string name="lostAgainstTOSViolator">Vous avez perdu contre quelqu\'un qui a violé les règles de Lichess.</string>
+  <string name="timeAlmostUp">Vous n\'avez presque plus de temps!</string>
 </resources>
