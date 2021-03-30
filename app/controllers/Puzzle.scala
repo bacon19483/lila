@@ -115,7 +115,6 @@ final class Puzzle(
       ctx: BodyContext[A]
   ) = {
     implicit val req = ctx.body
-    lila.mon.puzzle.round.attempt(ctx.isAuth, theme.key.value).increment()
     form
       .bindFromRequest()
       .fold(
@@ -139,6 +138,7 @@ final class Puzzle(
                     }
                 }
               case None =>
+                lila.mon.puzzle.round.attempt(ctx.isAuth, theme.key.value).increment()
                 ctx.me match {
                   case Some(me) =>
                     env.puzzle.finisher(id, theme.key, me, data.result) flatMap {
@@ -207,12 +207,14 @@ final class Puzzle(
           _ ?? { case PuzzleStreak(ids, puzzle) =>
             env.puzzle.jsonView(puzzle = puzzle, PuzzleTheme.mix.some, none, user = ctx.me) map { preJson =>
               val json = preJson ++ Json.obj("streak" -> ids)
-              EnableSharedArrayBuffer(
-                Ok(
-                  views.html.puzzle
-                    .show(puzzle, json, env.puzzle.jsonView.pref(ctx.pref), none)
-                )
-              )
+              EnableSharedArrayBuffer {
+                NoCache {
+                  Ok {
+                    views.html.puzzle
+                      .show(puzzle, json, env.puzzle.jsonView.pref(ctx.pref), none)
+                  }
+                }
+              }
             }
           }
         }

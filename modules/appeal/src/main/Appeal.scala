@@ -39,6 +39,16 @@ case class Appeal(
     )
   }
 
+  def canAddMsg: Boolean = {
+    val recentWithoutMod = msgs.foldLeft(Vector.empty[AppealMsg]) {
+      case (_, msg) if isByMod(msg)                                => Vector.empty
+      case (acc, msg) if msg.at isAfter DateTime.now.minusWeeks(1) => acc :+ msg
+      case (acc, _)                                                => acc
+    }
+    val recentSize = recentWithoutMod.foldLeft(0)(_ + _.text.size)
+    recentSize < Appeal.maxLength
+  }
+
   def unread     = copy(status = Appeal.Status.Unread)
   def read       = copy(status = Appeal.Status.Read)
   def toggleMute = if (isMuted) read else copy(status = Appeal.Status.Muted)
@@ -59,13 +69,20 @@ object Appeal {
     def apply(key: String) = all.find(_.key == key)
   }
 
-  val form = {
-    import play.api.data._
-    import play.api.data.Forms._
+  val maxLength = 1000
+
+  import play.api.data._
+  import play.api.data.Forms._
+
+  val form =
     Form[String](
-      single("text" -> nonEmptyText)
+      single("text" -> lila.common.Form.cleanNonEmptyText(minLength = 2, maxLength = maxLength))
     )
-  }
+
+  val modForm =
+    Form[String](
+      single("text" -> lila.common.Form.cleanNonEmptyText)
+    )
 }
 
 case class AppealMsg(

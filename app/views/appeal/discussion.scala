@@ -90,14 +90,16 @@ object discussion {
             div(cls := "appeal__msg__text")(richText(msg.text))
           )
         },
-        (asMod == inquiry) option renderForm(
-          textForm,
-          action =
-            if (asMod) routes.Appeal.reply(appeal.id).url
-            else routes.Appeal.post.url,
-          isNew = false,
-          presets = presets ifTrue asMod
-        )
+        if (!asMod && !appeal.canAddMsg) p("Please wait for a moderator to reply.")
+        else
+          (asMod == inquiry) option renderForm(
+            textForm,
+            action =
+              if (asMod) routes.Appeal.reply(appeal.id).url
+              else routes.Appeal.post.url,
+            isNew = false,
+            presets = presets ifTrue asMod
+          )
       )
     )
 
@@ -118,7 +120,11 @@ object discussion {
   ) =
     postForm(st.action := action)(
       form3.globalError(form),
-      form3.group(form("text"), if (isNew) "Create an appeal" else "Add something to the appeal")(
+      form3.group(
+        form("text"),
+        if (isNew) "Create an appeal" else "Add something to the appeal",
+        help = !isGranted(_.Appeals) option frag("Please be concise. Maximum 1000 chars.")
+      )(
         form3.textarea(_)(rows := 6)
       ),
       presets.map { ps =>
