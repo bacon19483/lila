@@ -6,6 +6,7 @@ import scala.concurrent.duration._
 
 import lila.common.{ EmailAddress, LightUser, NormalizedEmailAddress }
 import lila.rating.{ Perf, PerfType }
+import lila.hub.actorApi.user.{ KidId, NonKidId }
 
 case class User(
     id: String,
@@ -36,7 +37,7 @@ case class User(
   override def hashCode: Int = id.hashCode
 
   override def toString =
-    s"User $username(${perfs.bestRating}) games:${count.game}${marks.troll ?? " troll"}${marks.engine ?? " engine"}"
+    s"User $username(${perfs.bestRating}) games:${count.game}${marks.troll ?? " troll"}${marks.engine ?? " engine"}${!enabled ?? " closed"}"
 
   def light = LightUser(id = id, name = username, title = title.map(_.value), isPatron = isPatron)
 
@@ -79,7 +80,7 @@ case class User(
   def lameOrAlt        = lame || marks.alt
   def lameOrTrollOrAlt = lameOrTroll || marks.alt
 
-  def canLogin = enabled || !lameOrTrollOrAlt
+  def canFullyLogin = enabled || !lameOrTrollOrAlt
 
   def withMarks(f: UserMarks => UserMarks) = copy(marks = f(marks))
 
@@ -201,8 +202,11 @@ object User {
     def isApiHog               = roles.exists(_ contains "ROLE_API_HOG")
     def isDaysOld(days: Int)   = createdAt isBefore DateTime.now.minusDays(days)
     def isHoursOld(hours: Int) = createdAt isBefore DateTime.now.minusHours(hours)
+    def kidId                  = if (isKid) KidId(id) else NonKidId(id)
   }
-  case class Contacts(orig: Contact, dest: Contact)
+  case class Contacts(orig: Contact, dest: Contact) {
+    def hasKid = orig.isKid || dest.isKid
+  }
 
   case class PlayTime(total: Int, tv: Int) {
     import org.joda.time.Period

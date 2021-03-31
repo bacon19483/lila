@@ -41,7 +41,9 @@ package socket {
 }
 
 package clas {
-  case class IsTeacherOf(teacherId: String, studentId: String, promise: Promise[Boolean])
+  case class AreKidsInSameClass(kid1: user.KidId, kid2: user.KidId, promise: Promise[Boolean])
+  case class IsTeacherOf(teacher: String, student: String, promise: Promise[Boolean])
+  case class ClasMatesAndTeachers(kid: user.KidId, promise: Promise[Set[String]])
 }
 
 package report {
@@ -227,6 +229,8 @@ package fishnet {
 
 package user {
   case class Note(from: String, to: String, text: String, mod: Boolean)
+  case class KidId(id: String)
+  case class NonKidId(id: String)
 }
 
 package round {
